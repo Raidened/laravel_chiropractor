@@ -40,6 +40,7 @@ class HomeController extends Controller
                 'type'=>$booking->type,
             ];
         }
+        return view('home', compact('events'));
     }
 
 
