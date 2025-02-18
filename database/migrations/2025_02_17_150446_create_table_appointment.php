@@ -18,9 +18,10 @@ return new class extends Migration
             $table->bigInteger('client_id')->unsigned();
             $table->string('client_note');
             $table->boolean('status');
-            $table->string('doctor_name');
+            $table->string('doctor_id');
             $table->string('type');
             $table->foreign('client_id')->references('id')->on('users');
+            $table->foreign('doctor_id')->references('id')->on('users');
         });
 
     }
