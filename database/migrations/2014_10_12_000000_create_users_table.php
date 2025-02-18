@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->boolean('rank')->default(0);
+            $table->boolean('rank')->default(0); // 0 for customers, 1 for doctors
             $table->rememberToken();
             $table->timestamps();
         });

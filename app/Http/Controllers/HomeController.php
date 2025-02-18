@@ -24,27 +24,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
-    }
-
-    public function calendar()
-    {
-        $events = array();
-        $bookings = Appointment::all();
-        foreach ($bookings as $booking) {
-            $events[] = [
-                'date'=>$booking->date,
-                'client_note'=>$booking->client_note,
-                'status'=>$booking->status,
-                'doctor_name'=>$booking->doctor_name,
-                'type'=>$booking->type,
+        $events = Appointment::all()->map(function($appointment) {
+            return [
+                'title' => $appointment->type,
+                'start' => $appointment->date,
+                'doctor_name' => $appointment->doctor_name,
+                'status' => $appointment->status,
+                'client_note' => $appointment->client_note
             ];
-        }
+        })->toArray();
+
+        return view('home', compact('events'));
     }
-
-
-
-
-
-
 }

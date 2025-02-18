@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -21,8 +22,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'phone',
-        'address',
     ];
 
     /**
@@ -42,7 +41,18 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'rank',
     ];
+
+    /**
+     * Get the appointments for the user.
+     */
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class, 'client_id');
+    }
+
+    public function isDoctor()
+    {
+        return (bool)$this->rank === true;
+    }
 }

@@ -20,4 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'calendar'])->name('calendar.index');
+
+Route::middleware(['auth'])->group(function() {
+    Route::resource('appointments', App\Http\Controllers\AppointmentController::class);
+});

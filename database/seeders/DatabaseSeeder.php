@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'email' => "nonodubendo@gmail.com",
             'password' => bcrypt('azertyuiop'),
         ]);
-        DB::table('appointment')->insert([
+        DB::table('appointments')->insert([
             'date' => now(),
             'status' => 0,
             'client_id'=>1,
