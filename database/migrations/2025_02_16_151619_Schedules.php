@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('Schedule', function (Blueprint $table) {
+        Schema::create('Schedules', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->date('jour');
+            $table->date('day');
             $table->time('hour_start');
             $table->time('hour_end');
         });

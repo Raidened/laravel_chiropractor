@@ -8,15 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'appointments';
-    
+
     protected $fillable = [
-        'date',
+        'schedule_id',
         'client_id',
         'client_note',
         'status',
         'doctor_name',
         'type'
     ];
+    public function schedule()
+    {
+        return $this->belongsTo(Schedule::class);
+    }
 }

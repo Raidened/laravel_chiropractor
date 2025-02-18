@@ -67,7 +67,7 @@
             },
             events: booking,
             selectable: true,
-            selectHelper: true,
+            selectHelper: false,
             defaultView: 'month',
             displayEventTime: true,
             eventRender: function(event, element) {

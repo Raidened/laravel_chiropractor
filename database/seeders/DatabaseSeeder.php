@@ -24,8 +24,13 @@ class DatabaseSeeder extends Seeder
             'email' => "nonodubendo@gmail.com",
             'password' => bcrypt('azertyuiop'),
         ]);
+        DB::table('schedules')->insert([
+            'day' => "2025-02-20",
+            'hour_start' => "10:00:00",
+            'hour_end' => "10:30:00",
+        ]);
         DB::table('appointments')->insert([
-            'date' => now(),
+            'schedule_id' => 1,
             'status' => 0,
             'client_id'=>1,
             'client_note' => "hemoroide",
@@ -33,5 +38,6 @@ class DatabaseSeeder extends Seeder
             'type' => "douleureux"
 
         ]);
+
     }
 }

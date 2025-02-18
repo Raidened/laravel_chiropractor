@@ -1,4 +1,4 @@
-
+<?php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +10,11 @@ class Schedule extends Model
 
     protected $fillable = [
         'day',
-        'start_time',
-        'end_time',
+        'hour_start',
+        'hour_end',
     ];
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }

@@ -40,7 +40,7 @@ class AppointmentController extends Controller
     {
         $request->validate([
             'doctor_id' => 'required|exists:users,id',
-            'date' => 'required|date',
+            'date' => 'required|date|unique:appointments,date',
             'type' => 'required|string',
             'client_note' => 'nullable|string',
         ]);

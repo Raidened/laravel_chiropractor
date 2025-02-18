@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -27,10 +28,11 @@ class HomeController extends Controller
         $events = Appointment::all()->map(function($appointment) {
             return [
                 'title' => $appointment->type,
-                'start' => $appointment->date,
                 'doctor_name' => $appointment->doctor_name,
                 'status' => $appointment->status,
-                'client_note' => $appointment->client_note
+                'client_note' => $appointment->client_note,
+                'start' => date('Y-m-d', strtotime($appointment->schedule->day)) . 'T' . $appointment->schedule->hour_start,
+                'end' => date('Y-m-d', strtotime($appointment->schedule->day)) . 'T' . $appointment->schedule->hour_end
             ];
         })->toArray();
 
