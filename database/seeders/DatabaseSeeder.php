@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             'status' => 0,
             'client_id'=>1,
             'client_note' => "hemoroide",
-            'doctor_name' => "DR",
+            'doctor_name' => "Dr.Smith",
             'type' => "douleureux"
 
         ]);

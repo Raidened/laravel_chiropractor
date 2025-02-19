@@ -19,6 +19,8 @@
                     @endif
                 </div>
 
+
+                <!--
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
@@ -28,13 +30,28 @@
 
                     {{ __('You are logged in!') }}
                 </div>
+                -->
+
+                <div class="form-group row mb-4 offset-md-1 mt-5">
+                    <label class="col-md-4 col-form-label text-md-right">{{ __('Select Doctor') }}</label>
+                    <div class="col-md-4">
+                        <select name="doctor_id" class="form-control" required>
+                            @foreach($doctors as $doctor)
+                                <option value="{{ $doctor->id }}">{{ $doctor->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
                 <div class="container">
+
                     <div class="row">
                         <div class="col-12">
                             <h3 class="text-center mt-5">
                                 Full Calendar
+
                             </h3>
+
                             <div class="col-md-11 offset-1 mt-5 mb-5">
                                 <div id="calendar">
 
@@ -46,19 +63,13 @@
 
                 </div>
 
-
-
-
-
-
-
             </div>
         </div>
     </div>
 </div>
 <script>
     $(document).ready(function(){
-        var booking = @json($events ?? []);
+        var booking = @json($events);
         $('#calendar').fullCalendar({
             header:{
                 left: 'prev,next today',
@@ -72,6 +83,7 @@
             displayEventTime: true,
             eventRender: function(event, element) {
                 element.find('.fc-title').append("<br/>" + event.doctor_name);
+
             }
         });
     });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Schedule;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -35,7 +36,8 @@ class HomeController extends Controller
                 'end' => date('Y-m-d', strtotime($appointment->schedule->day)) . 'T' . $appointment->schedule->hour_end
             ];
         })->toArray();
+        $doctors = User::where('rank', 1)->get();
 
-        return view('home', compact('events'));
+        return view('home', compact('events','doctors'));
     }
 }
