@@ -14,9 +14,16 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     {{ __('Dashboard') }}
-                    @if(auth()->user()->rank == 0)
-                        <a href="{{ route('appointments.create') }}" class="btn btn-primary">Book Appointment</a>
-                    @endif
+
+                    @can('viewAny', App\Models\Appointment::class)
+                        <a href="{{ route('appointments.create') }}" class="btn btn-primary">Book Appointments</a>
+                    @endcan
+
+                    @can('viewAnyAdmin', App\Models\Appointment::class)
+                        <a href="{{ route('admin.index') }}" class="btn btn-primary">Administrate Appointments</a>
+                    @endcan
+
+
                 </div>
 
 
@@ -32,15 +39,22 @@
                 </div>
                 -->
 
-                <div class="form-group row mb-4 offset-md-1 mt-5">
-                    <label class="col-md-4 col-form-label text-md-right">{{ __('Select Doctor') }}</label>
-                    <div class="col-md-4">
-                        <select name="doctor_id" class="form-control" required>
-                            @foreach($doctors as $doctor)
-                                <option value="{{ $doctor->id }}">{{ $doctor->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="form-group row mb-4 offset-md-5 mt-5">
+                    <form method="POST" action="{{ route('appointments.store') }}">
+                        @csrf
+                        <label class="col-md-4 col-form-label text-md-right">{{ __('Select Doctor') }}</label>
+                        <div class="col-md-4">
+                            <select name="doctor_id" class="form-control" required>
+                                @foreach($doctors as $doctor)
+                                    <option value="{{ $doctor->id }}">{{ $doctor->name }}</option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('Submit') }}
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
 
                 <div class="container">

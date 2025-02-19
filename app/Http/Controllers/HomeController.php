@@ -28,7 +28,6 @@ class HomeController extends Controller
     {
         $events = Appointment::all()->map(function($appointment) {
             return [
-                'title' => $appointment->type,
                 'doctor_name' => $appointment->doctor_name,
                 'status' => $appointment->status,
                 'client_note' => $appointment->client_note,
