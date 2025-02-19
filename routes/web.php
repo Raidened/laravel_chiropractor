@@ -28,4 +28,5 @@ Route::middleware(['auth'])->group(function() {
 });
 Route::get("/admin", [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
 Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
-Route::put('/appointments/{id}', [AdminController::class, 'modify'])->name('appointments.update');
+Route::post('/admin/modify/{id}', [AdminController::class, 'modify'])->name('admin.modify');
+Route::post('/admin/modifyStatus/{id}', [AdminController::class, 'modifyStatus'])->name('admin.modifyStatus');

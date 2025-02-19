@@ -21,7 +21,9 @@ class AdminController extends Controller
     public function modify(Request $request, $id)
     {
         $request->validate([
-            'date-day' => 'required|date',
+            'date' => 'required|date',
+            'hour_start' => 'required',
+            'hour_end' => 'required'
         ]);
 
         $appointment = Appointment::findOrFail($id);
@@ -29,8 +31,26 @@ class AdminController extends Controller
 
         $schedule->update([
             'day' => $request->date,
+            'hour_start' => $request->hour_start,
+            'hour_end' => $request->hour_end
         ]);
 
         return redirect()->route('admin.index')->with('success', 'Schedule updated successfully.');
     }
+    public function modifyStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required'
+        ]);
+
+        $appointment = Appointment::findOrFail($id);
+
+        $appointment->update([
+            'status' => $request->status
+        ]);
+
+        return redirect()->route('admin.index')->with('success', 'Status updated successfully.');
+
+    }
+
 }
