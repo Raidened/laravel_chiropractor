@@ -35,9 +35,12 @@
                 <div class="form-group row mb-4 offset-md-1 mt-5">
                     <label class="col-md-4 col-form-label text-md-right">{{ __('Select Doctor') }}</label>
                     <div class="col-md-4">
-                        <select name="doctor_id" class="form-control" required>
+                        <select name="doctor_id" class="form-control" id="doctor-select" required>
+                            <option value="">All Doctors</option>
                             @foreach($doctors as $doctor)
-                                <option value="{{ $doctor->id }}">{{ $doctor->name }}</option>
+                                <option value="{{ $doctor->id }}" {{ $selectedDoctorId == $doctor->id ? 'selected' : '' }}>
+                                    {{ $doctor->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -78,13 +81,38 @@
             },
             events: booking,
             selectable: true,
-            selectHelper: false,
+            selectHelper: true,
             defaultView: 'month',
             displayEventTime: true,
+            timeFormat: 'H:mm',
+            slotDuration: '00:30:00',
+            snapDuration: '00:30:00',
+            minTime: '09:00:00',
+            maxTime: '18:00:00',
+            selectConstraint: {
+                start: '09:00',
+                end: '18:00',
+                dow: [1, 2, 3, 4, 5]  // Monday - Friday
+            },
             eventRender: function(event, element) {
                 element.find('.fc-title').append("<br/>" + event.doctor_name);
-
+            },
+            eventColor: function(event) {
+                return event.color;
+            },
+            select: function(start, end) {
+                var minutes = start.minutes();
+                var roundedMinutes = Math.round(minutes/30) * 30;
+                start.minutes(roundedMinutes);
+                end = moment(start).add(30, 'minutes');
+                
+                window.location.href = '/appointments/create?date=' + start.format('YYYY-MM-DD HH:mm:ss');
             }
+        });
+
+        $('#doctor-select').change(function() {
+            var doctorId = $(this).val();
+            window.location.href = '{{ route("home") }}?doctor_id=' + doctorId;
         });
     });
 </script>

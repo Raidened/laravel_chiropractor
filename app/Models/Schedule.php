@@ -13,6 +13,13 @@ class Schedule extends Model
         'hour_start',
         'hour_end',
     ];
+
+    protected $casts = [
+        'day' => 'date',
+        'hour_start' => 'datetime',
+        'hour_end' => 'datetime',
+    ];
+
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

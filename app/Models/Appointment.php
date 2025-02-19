@@ -17,10 +17,28 @@ class Appointment extends Model
         'client_note',
         'status',
         'doctor_name',
-        'type'
+        'type',
+        'date'
     ];
+
+    protected $casts = [
+        'date' => 'datetime',
+        'status' => 'boolean'
+    ];
+
     public function schedule()
     {
         return $this->belongsTo(Schedule::class);
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(User::class, 'client_id');
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_name', 'name')
+            ->where('rank', 1);
     }
 }
