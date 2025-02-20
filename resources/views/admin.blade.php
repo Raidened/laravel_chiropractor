@@ -56,16 +56,16 @@
                                                            name="date"
                                                            min="{{ date('Y-m-d') }}"
                                                            max="{{ date('Y-m-d', strtotime('+1 year')) }}"
-                                                           value="{{ $appointment->schedule->day }}"
+                                                           value="{{ $appointment->schedule->day->format('Y-m-d') }}"
                                                            onchange="this.form.submit()">
                                                     <input type="time" class="form-control"
                                                            name="hour_start"
-                                                           value="{{ $appointment->schedule->hour_start }}"
+                                                           value="{{ $appointment->schedule->hour_start->format('H:i') }}"
                                                            onchange="this.form.submit()">
                                                     <input type="time" class="form-control"
                                                            name="hour_end"
                                                            min="{{ $appointment->schedule->hour_start }}"
-                                                           value="{{ $appointment->schedule->hour_end }}"
+                                                           value="{{ $appointment->schedule->hour_end->format('H:i') }}"
                                                            onchange="this.form.submit()">
 
                                                 </form>

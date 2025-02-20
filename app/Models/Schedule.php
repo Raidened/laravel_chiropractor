@@ -14,6 +14,9 @@ class Schedule extends Model
         'hour_end',
         'created_at',
         'updated_at',
+        'day' => 'date',
+        'hour_start' => 'datetime',
+        'hour_end' => 'datetime',
     ];
     public function appointments()
     {
