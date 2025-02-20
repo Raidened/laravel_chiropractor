@@ -13,19 +13,19 @@ class AppointmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $appointments = Appointment::where('user_id', auth()->id())->get();
-        return view('appointments.index', compact('appointments'));
-    }
+
+
+
 
     /**
      * Show the form for creating a new appointment.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function create()
     {
+        $this->authorize('viewAny', Appointment::class);
         $doctors = User::where('rank', 1)->get();
         return view('appointments.create', compact('doctors'));
     }
@@ -115,7 +115,6 @@ class AppointmentController extends Controller
     {
         $appointment->delete();
 
-        return redirect()->route('appointments.index')
-            ->with('success', 'Appointment deleted successfully.');
+        return redirect()->route('admin.index')->with('success', 'Appointment deleted successfully');
     }
 }
