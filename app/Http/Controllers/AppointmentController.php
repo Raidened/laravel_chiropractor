@@ -8,6 +8,8 @@ use App\Models\Appointment;
 use App\Http\Requests\StoreAppointmentRequest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationConfirmation;
 
 class AppointmentController extends Controller
 {
@@ -69,6 +71,13 @@ class AppointmentController extends Controller
             'status' => false,
             'doctor_name' => $doctor->name,
         ]);
+        $message = "Avec Dr. {$doctor->name} est confirmé pour le {$appointmentDate->format('d/m/Y H:i')}.";
+        $subject = "Confirmation de rendez-vous";
+        $toEmail = 'mael315mael@gmail.com';
+
+        Mail::to($toEmail)->send(new ReservationConfirmation(
+            $message,$subject
+        ));
 
         return redirect()->route('home')
             ->with('success', 'Appointment booked successfully!');

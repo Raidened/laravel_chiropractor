@@ -38,12 +38,13 @@ class HomeController extends Controller
         }
 
         $events = $query->get()->map(function($appointment) {
+            $scheduleDay = Carbon::parse($appointment->schedule->day);
             return [
                 'doctor_name' => $appointment->doctor_name,
                 'status' => $appointment->status,
                 'client_note' => $appointment->client_note,
-                'start' => $appointment->schedule->hour_start,
-                'end' => $appointment->schedule->hour_end,
+                'start' => $scheduleDay->format('Y-m-d') . ' ' . $appointment->schedule->hour_start->format('H:i:s'),
+                'end' => $scheduleDay->format('Y-m-d') . ' ' . $appointment->schedule->hour_end->format('H:i:s'),
                 'color' => $appointment->status ? '#28a745' : '#ffc107'
             ];
         })->toArray();
