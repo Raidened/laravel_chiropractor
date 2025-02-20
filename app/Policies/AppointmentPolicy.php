@@ -16,6 +16,13 @@ class AppointmentPolicy
         return false;
     }
 
+    public function viewAnyAdmin(User $user): bool
+    {
+        if ($user->rank === 1) {
+            return true;
+        }
+        return false;
+    }
     public function view(User $user, Appointment $appointment)
     {
         return $user->id === $appointment->client_id || $user->rank === 1;
