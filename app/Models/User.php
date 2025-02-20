@@ -55,5 +55,4 @@ class User extends Authenticatable
     {
         return (bool)$this->rank === true;
     }
-
 }
