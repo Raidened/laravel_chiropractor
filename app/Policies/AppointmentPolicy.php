@@ -40,7 +40,6 @@ class AppointmentPolicy
 
     public function delete(User $user, Appointment $appointment)
     {
-        return $user->id === $appointment->client_id &&
-               $appointment->date->diffInHours(now()) >= 24;
+        return $user->rank === 1 || $user->id === $appointment->client_id;
     }
 }

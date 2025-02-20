@@ -34,7 +34,7 @@ class AdminController extends Controller
             'hour_start' => $request->hour_start,
             'hour_end' => $request->hour_end
         ]);
-        dd($appointment);
+        dd($appointment, $appointment->schedule);
         return redirect()->route('admin.index')->with('success', 'Schedule updated successfully.');
     }
 

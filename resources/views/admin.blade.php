@@ -23,7 +23,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                 @foreach($appointments as $appointment)
+                                @foreach($appointments as $appointment)
                                     @if(Auth::user()->name == $appointment->doctor_name)
                                         <tr>
                                             <td>{{ $appointment->id }}</td>
