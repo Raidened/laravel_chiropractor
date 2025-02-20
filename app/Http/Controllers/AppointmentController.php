@@ -13,7 +13,6 @@ class AppointmentController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Appointment::class, 'appointment');
     }
 
     /**
@@ -23,6 +22,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Appointment::class);
         $appointments = Appointment::where('client_id', auth()->id())
             ->with(['schedule', 'doctor'])
             ->orderBy('date', 'asc')
@@ -130,18 +130,7 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
-        // Vérifier que le rendez-vous appartient bien au client connecté
-        if ($appointment->client_id !== auth()->id()) {
-            return redirect()->route('appointments.index')
-                ->with('error', 'You are not authorized to cancel this appointment.');
-        }
-
-        // Ne pas permettre l'annulation si le rendez-vous est dans moins de 24h
-        if ($appointment->date->diffInHours(now()) < 24) {
-            return redirect()->route('appointments.index')
-                ->with('error', 'Appointments cannot be cancelled less than 24 hours before the scheduled time.');
-        }
-
+        $this->authorize('delete', $appointment);
         $appointment->delete();
 
         return redirect()->route('appointments.index')

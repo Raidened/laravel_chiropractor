@@ -10,7 +10,10 @@ class AppointmentPolicy
 {
     public function viewAny(User $user)
     {
-        return true;
+        if($user->rank === 0) {
+            return true;
+        }
+        return false;
     }
 
     public function view(User $user, Appointment $appointment)
@@ -20,7 +23,7 @@ class AppointmentPolicy
 
     public function create(User $user)
     {
-        return $user->rank === 0; 
+        return $user->rank === 0;
     }
 
     public function update(User $user, Appointment $appointment)
@@ -30,7 +33,7 @@ class AppointmentPolicy
 
     public function delete(User $user, Appointment $appointment)
     {
-        return $user->id === $appointment->client_id && 
+        return $user->id === $appointment->client_id &&
                $appointment->date->diffInHours(now()) >= 24;
     }
 }
