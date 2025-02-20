@@ -130,7 +130,16 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
-        $this->authorize('delete', $appointment);
+        if ($appointment->date->diffInHours(now()) < 24) {
+            return redirect()->route('appointments.index')
+                ->with('error', 'You cannot cancel an appointment less than 24 hours before the scheduled time.');
+        }
+
+        if ($appointment->client_id !== auth()->id()) {
+            return redirect()->route('appointments.index')
+                ->with('error', 'You are not authorized to cancel this appointment.');
+        }
+
         $appointment->delete();
 
         return redirect()->route('appointments.index')
