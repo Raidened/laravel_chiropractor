@@ -23,24 +23,23 @@ class AppointmentPolicy
         }
         return false;
     }
-    public function view(User $user, Appointment $appointment)
-    {
-        return $user->id === $appointment->client_id || $user->rank === 1;
-    }
 
     public function create(User $user)
     {
         return $user->rank === 0;
     }
 
-    public function update(User $user, Appointment $appointment)
+    public function update(User $user)
     {
-        return $user->id === $appointment->client_id;
+        return $user->rank ===1;
     }
 
     public function delete(User $user, Appointment $appointment)
     {
-        return $user->id === $appointment->client_id &&
+        if ($user->rank === 1) {
+            return true;
+        }
+        return $user->id === $appointment->client_id  &&
                $appointment->date->diffInHours(now()) >= 24;
     }
 }

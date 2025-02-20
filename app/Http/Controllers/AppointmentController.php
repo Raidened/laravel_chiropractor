@@ -14,7 +14,7 @@ use App\Mail\ReservationConfirmation;
 class AppointmentController extends Controller
 {
     /**
-     * Display a listing of the appointments.
+     * Display a listing of the appointments of the current users.
      *
      * @return \Illuminate\Http\Response
      */
@@ -29,7 +29,7 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Show the form for creating a new appointment.
+     * Show the form page for creating a new appointment.
      *
      * @return \Illuminate\Http\Response
      */
@@ -48,6 +48,7 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
+        $this->authorize('create', Appointment::class);
         $validated = $request->validated();
         $doctor = User::findOrFail($validated['doctor_id']);
 
@@ -85,28 +86,7 @@ class AppointmentController extends Controller
 
 
 
-    /**
-     * Update the specified appointment in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Appointment $appointment)
-    {
-        $request->validate([
-            'date' => 'required|date',
-            'type_of_consultation' => 'required|string',
-        ]);
 
-        $appointment->update([
-            'date' => $request->date,
-            'type_of_consultation' => $request->type_of_consultation,
-        ]);
-
-        return redirect()->route('appointments.index')
-            ->with('success', 'Appointment updated successfully.');
-    }
 
     /**
      * Remove the specified appointment from storage.
@@ -116,6 +96,7 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
+        $this->authorize('delete', $appointment);
         if ($appointment->date->diffInHours(now()) < 24 && auth()->user()->rank === 0) {
             return redirect()->route('appointments.index')
                 ->with('error', 'You cannot cancel an appointment less than 24 hours before the scheduled time.');

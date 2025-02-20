@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
-
+use App\http\Requests\AdminRequest;
 class AdminController extends Controller
 {
     public function index()
@@ -18,13 +18,10 @@ class AdminController extends Controller
         return view('admin', compact('appointments'));
     }
 
-    public function modify(Request $request, $id)
+    public function modify(AdminRequest $request, $id)
     {
-        $request->validate([
-            'date' => 'required|date',
-            'hour_start' => 'required',
-            'hour_end' => 'required'
-        ]);
+
+        $this->authorize('update', Appointment::class);
 
         $appointment = Appointment::findOrFail($id);
         $schedule = $appointment->schedule;
@@ -37,11 +34,10 @@ class AdminController extends Controller
         return redirect()->route('admin.index')->with('success', 'Schedule updated successfully.');
     }
 
-    public function modifyStatus(Request $request, $id)
+    public function modifyStatus(AdminRequest $request, $id)
     {
-        $request->validate([
-            'status' => 'required'
-        ]);
+        $this->authorize('update', Appointment::class);
+
 
         $appointment = Appointment::findOrFail($id);
 

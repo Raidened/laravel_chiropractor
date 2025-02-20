@@ -89,7 +89,6 @@
             events: booking,
             selectable: true,
             selectHelper: true,
-            defaultView: 'month',
             displayEventTime: true,
             timeFormat: 'H:mm',
             slotDuration: '00:30:00',

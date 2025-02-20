@@ -27,6 +27,6 @@ class Schedule extends Model
 
     public function appointments()
     {
-        return $this->hasMany(Appointment::class);
+        return $this->hasOne(Appointment::class);
     }
 }
