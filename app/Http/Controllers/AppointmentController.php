@@ -51,7 +51,7 @@ class AppointmentController extends Controller
     {
         $validated = $request->validated();
         $doctor = User::findOrFail($validated['doctor_id']);
-        
+
         $appointmentDate = Carbon::parse($validated['date'])->setSecond(0);
         $minutes = $appointmentDate->minute;
         $roundedMinutes = round($minutes / 30) * 30;

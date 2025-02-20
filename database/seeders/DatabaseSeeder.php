@@ -24,20 +24,19 @@ class DatabaseSeeder extends Seeder
             'email' => "nonodubendo@gmail.com",
             'password' => bcrypt('azertyuiop'),
         ]);
-        DB::table('schedules')->insert([
-            'day' => "2025-02-20",
-            'hour_start' => "10:00:00",
-            'hour_end' => "10:30:00",
+        DB::table('users')->insert([
+            'name' => "Dr.Smith",
+            'email' => "smith@gmail.com",
+            'password' => bcrypt('password'),
+            'rank' => 1,
         ]);
-        DB::table('appointments')->insert([
-            'schedule_id' => 1,
-            'status' => 0,
-            'client_id'=>1,
-            'client_note' => "hemoroide",
-            'doctor_name' => "Dr.Smith",
-            'type' => "douleureux"
+        DB::table('users')->insert([
+            'name' => "Dr.John",
+            'email' => "john@gmail.com",
+            'password' => bcrypt('password'),
+            'rank' => 1,
+        ]);
 
-        ]);
 
     }
 }

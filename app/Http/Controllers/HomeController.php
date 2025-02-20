@@ -27,9 +27,9 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $selectedDoctorId = $request->input('doctor_id');
-        
+
         $query = Appointment::query();
-        
+
         if ($selectedDoctorId) {
             $doctor = User::find($selectedDoctorId);
             if ($doctor) {
@@ -43,8 +43,8 @@ class HomeController extends Controller
                 'doctor_name' => $appointment->doctor_name,
                 'status' => $appointment->status,
                 'client_note' => $appointment->client_note,
-                'start' => Carbon::parse($appointment->date)->format('Y-m-d\TH:i:s'),
-                'end' => Carbon::parse($appointment->date)->addMinutes(30)->format('Y-m-d\TH:i:s'),
+                'start' => $appointment->schedule->hour_start,
+                'end' => $appointment->schedule->hour_end,
                 'color' => $appointment->status ? '#28a745' : '#ffc107'
             ];
         })->toArray();
