@@ -20,4 +20,3 @@ Route::get("/admin", [App\Http\Controllers\AdminController::class, 'index'])->na
 Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
 Route::post('/admin/modify/{id}', [AdminController::class, 'modify'])->name('admin.modify');
 Route::post('/admin/modifyStatus/{id}', [AdminController::class, 'modifyStatus'])->name('admin.modifyStatus');
-Route::get('send-mail', [EmailController::class, 'SendEmail']);
