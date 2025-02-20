@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Schedule;
 use App\Models\Appointment;
+use App\Http\Requests\StoreAppointmentRequest;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
@@ -13,16 +16,21 @@ class AppointmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-
-
+    public function index()
+    {
+        $this->authorize('viewAny', Appointment::class);
+        $appointments = Appointment::where('client_id', auth()->id())
+            ->with(['schedule', 'doctor'])
+            ->orderBy('date', 'asc')
+            ->get();
+        return view('appointments.index', compact('appointments'));
+    }
 
     /**
      * Show the form for creating a new appointment.
      *
      * @return \Illuminate\Http\Response
      */
-
     public function create()
     {
         $this->authorize('viewAny', Appointment::class);
@@ -33,31 +41,37 @@ class AppointmentController extends Controller
     /**
      * Store a newly created appointment in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreAppointmentRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAppointmentRequest $request)
     {
-        $request->validate([
-            'doctor_id' => 'required|exists:users,id',
-            'date' => 'required|date|unique:appointments,date',
-            'type' => 'required|string',
-            'client_note' => 'nullable|string',
+        $validated = $request->validated();
+        $doctor = User::findOrFail($validated['doctor_id']);
+
+        $appointmentDate = Carbon::parse($validated['date'])->setSecond(0);
+        $minutes = $appointmentDate->minute;
+        $roundedMinutes = round($minutes / 30) * 30;
+        $appointmentDate->minute = $roundedMinutes;
+
+        $schedule = Schedule::create([
+            'day' => $appointmentDate->toDateString(),
+            'hour_start' => $appointmentDate->format('H:i:s'),
+            'hour_end' => $appointmentDate->copy()->addMinutes(30)->format('H:i:s'),
         ]);
 
-        $doctor = User::findOrFail($request->doctor_id);
-        $appointmentDate = \Carbon\Carbon::parse($request->date)->format('Y-m-d H:i:00');
-
-        Appointment::create([
+        $appointment = Appointment::create([
             'client_id' => auth()->id(),
+            'schedule_id' => $schedule->id,
             'date' => $appointmentDate,
-            'type' => $request->type,
-            'client_note' => $request->client_note ?? '',
-            'status' => false, // Pending by default
+            'type' => $validated['type'],
+            'client_note' => $validated['client_note'] ?? '',
+            'status' => false,
             'doctor_name' => $doctor->name,
         ]);
 
-        return redirect()->route('home')->with('success', 'Appointment booked successfully!');
+        return redirect()->route('home')
+            ->with('success', 'Appointment booked successfully!');
     }
 
     /**
@@ -113,8 +127,19 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
+        if ($appointment->date->diffInHours(now()) < 24) {
+            return redirect()->route('appointments.index')
+                ->with('error', 'You cannot cancel an appointment less than 24 hours before the scheduled time.');
+        }
+
+        if ($appointment->client_id !== auth()->id()) {
+            return redirect()->route('appointments.index')
+                ->with('error', 'You are not authorized to cancel this appointment.');
+        }
+
         $appointment->delete();
 
-        return redirect()->route('admin.index')->with('success', 'Appointment deleted successfully');
+        return redirect()->route('appointments.index')
+            ->with('success', 'Appointment cancelled successfully.');
     }
 }

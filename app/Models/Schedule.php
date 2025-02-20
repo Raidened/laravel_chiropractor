@@ -15,6 +15,13 @@ class Schedule extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected $casts = [
+        'day' => 'date',
+        'hour_start' => 'datetime',
+        'hour_end' => 'datetime',
+    ];
+
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

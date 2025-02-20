@@ -2,76 +2,38 @@
 
 namespace App\Policies;
 
-use App\Models\Appointment;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\Appointment;
+use Illuminate\Auth\Access\HandlerContract;
 
 class AppointmentPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user)
     {
-        if ($user->rank === 0) {
-            return true;
-        }
-        return false;
-    }
-    public function viewAnyAdmin(User $user): bool
-    {
-        if ($user->rank === 1) {
+        if($user->rank === 0) {
             return true;
         }
         return false;
     }
 
-
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Appointment $appointment): bool
+    public function view(User $user, Appointment $appointment)
     {
-        //
+        return $user->id === $appointment->client_id || $user->rank === 1;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function create(User $user)
     {
-        //
+        return $user->rank === 0;
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Appointment $appointment): bool
+    public function update(User $user, Appointment $appointment)
     {
-        //
+        return $user->id === $appointment->client_id;
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Appointment $appointment): bool
+    public function delete(User $user, Appointment $appointment)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Appointment $appointment): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Appointment $appointment): bool
-    {
-        //
+        return $user->id === $appointment->client_id &&
+               $appointment->date->diffInHours(now()) >= 24;
     }
 }
